@@ -1,10 +1,12 @@
+```html
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>대선케미칼 - ABS원료 제조 전문기업</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* 기본 스타일 */
         * {
@@ -18,12 +20,14 @@
             line-height: 1.6;
             color: #333;
             background-color: #f8f9fa;
+            overflow-x: hidden;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
+            width: 100%;
         }
         
         /* 헤더 스타일 */
@@ -69,6 +73,16 @@
             color: #a8c6fa;
         }
         
+        /* 모바일 메뉴 */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
         /* 메인 배너 */
         .hero {
             background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://source.unsplash.com/random/1600x900/?factory,chemical') no-repeat center center/cover;
@@ -83,6 +97,7 @@
         .hero-content {
             max-width: 800px;
             margin: 0 auto;
+            padding: 0 20px;
         }
         
         .hero h2 {
@@ -418,7 +433,7 @@
             font-size: 14px;
         }
         
-        /* 반응형 디자인 */
+        /* 반응형 디자인 - 개선된 버전 */
         @media (max-width: 992px) {
             .about-content {
                 flex-direction: column;
@@ -435,24 +450,40 @@
             .hero p {
                 font-size: 18px;
             }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
         }
         
         @media (max-width: 768px) {
-            header {
-                padding: 15px 0;
-            }
-            
-            .header-content {
-                flex-direction: column;
-                text-align: center;
+            .menu-toggle {
+                display: block;
             }
             
             nav ul {
-                margin-top: 15px;
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                background-color: #1a4b8c;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                transition: left 0.3s;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            nav ul.active {
+                left: 0;
             }
             
             nav ul li {
-                margin: 0 10px;
+                margin: 10px 0;
+            }
+            
+            .header-content {
+                justify-content: space-between;
             }
             
             .section-title h2 {
@@ -464,7 +495,20 @@
             }
             
             .hero {
-                margin-top: 100px;
+                height: 80vh;
+                margin-top: 70px;
+            }
+            
+            .about-image, .about-text {
+                width: 100%;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-column {
+                flex: 100%;
             }
         }
         
@@ -485,8 +529,20 @@
                 margin-bottom: 40px;
             }
             
-            .product-card, .blog-post {
+            .product-card {
                 margin-bottom: 20px;
+            }
+            
+            .contact-form {
+                padding: 20px;
+            }
+            
+            .form-control {
+                padding: 10px;
+            }
+            
+            .submit-btn {
+                width: 100%;
             }
         }
     </style>
@@ -494,18 +550,23 @@
 <body>
     <!-- 헤더 -->
     <header>
-        <div class="container header-content">
-            <div class="logo">
-                <h1>대선케미칼</h1>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>대선케미칼</h1>
+                </div>
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav>
+                    <ul id="navMenu">
+                        <li><a href="#home">홈</a></li>
+                        <li><a href="#about">회사소개</a></li>
+                        <li><a href="#products">제품소개</a></li>
+                        <li><a href="#contact">연락처</a></li>
+                    </ul>
+                </nav>
             </div>
-            <nav>
-                <ul>
-                    <li><a href="#home">홈</a></li>
-                    <li><a href="#about">회사소개</a></li>
-                    <li><a href="#products">제품소개</a></li>
-                    <li><a href="#contact">연락처</a></li>
-                </ul>
-            </nav>
         </div>
     </header>
 
@@ -580,8 +641,6 @@
             </div>
         </div>
     </section>
-
-   
 
     <!-- 문의 섹션 -->
     <section class="contact" id="contact">
@@ -711,3 +770,25 @@
                 if (targetElement) {
                     window.scrollTo({
                         top: targetElement.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+                    
+                    // 모바일 메뉴가 열려있을 경우 닫기
+                    if (navMenu.classList.contains('active')) {
+                        navMenu.classList.remove('active');
+                    }
+                }
+            });
+        });
+        
+        // 모바일 메뉴 토글
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+        
+        menuToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
+```
